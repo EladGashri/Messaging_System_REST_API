@@ -2,31 +2,30 @@ from database.Database import Database
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
-from typing import Dict, Optional
+from typing import Optional
 
 
 class SqlAlchemyDatabase(Database):
 
-    def __init__(self, app:Flask):
-        self._createDatabase(app)
+    def __init__(self, app:Flask, create:bool = True):
+        self._config(app)
         self._db:SQLAlchemy = SQLAlchemy(app)
         self.MessagesClass=self._createMessagesTable()
         self.UserClass=self._createUsersTable()
-        self._db.create_all()
+        if create:
+            self._db.create_all()
 
 
-    def insertNewMessage(self, id: int, senderId: int, receiverId: int, message: str, subject: str,creationDate: date = date.today(), read: bool = False) -> None:
-        newMessage = self.MessagesClass(id, senderId, receiverId, message, subject, creationDate, read)
+    def insertNewMessage(self, id: int, senderUsername: str, receiverUsername: str, message: str, subject: str,creationDate: date = date.today(), read: bool = False) -> None:
+        newMessage = self.MessagesClass(id=id, senderUsername=senderUsername, receiverUsername=receiverUsername, message=message, subject=subject, creationDate=creationDate, read=read)
         self._db.session.add(newMessage)
         self._db.session.commit()
 
 
     def insertNewUser(self, username: str, password: str, name: str) -> None:
-        print("trying to insert "+username)
         newUser = self.UserClass(username=username, password=password, name=name)
         self._db.session.add(newUser)
         self._db.session.commit()
-        print(username+" inserted")
 
 
     def getAllMessages(self):
@@ -41,26 +40,15 @@ class SqlAlchemyDatabase(Database):
         return self.MessagesClass.query.filter_by(id=id).first()
 
 
-    def getUser(self, username: str = None, password:str = None):
-        if username is None and password is None:
-            return None
-        elif password is None:
-            return self.UserClass.query.filter_by(username=username).first()
-        else:
+    def getUser(self, username:str, password:str):
             return self.UserClass.query.filter_by(username=username, password=password).first()
-
-
-    def getUserFromUserFeilds(self, userFields:Dict[str,str]):
-        username:Optional[str] = userFields.get("username",None)
-        password:Optional[str] = userFields.get("password",None)
-        return self.getUser(username,password)
 
 
     def deleteDatabase(self)->None:
         self._db.drop_all()
 
 
-    def _createDatabase(self, app:Flask)->None:
+    def _config(self, app:Flask)->None:
         app.config["SQLALCHEMY_DATABASE_URI"] = Database.DATABASE_PATH
         app.config["SECRET_KEY"] = Database.SECRET_KEY
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -84,5 +72,5 @@ class SqlAlchemyDatabase(Database):
             username: str = self._db.Column(self._db.String(50), primary_key=True)
             password: str = self._db.Column(self._db.String(50), nullable=False)
             name: str = self._db.Column(self._db.String(50), unique=False, nullable=False)
-            messages = self._db.relationship("Message", foreign_keys=username, backref="sender", primaryjoin="User.username == Message.senderUsername")
+            messages = self._db.relationship("Message", foreign_keys=username, backref="sender", primaryjoin="User.username == Message.receiverUsername")
         return User

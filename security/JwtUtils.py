@@ -2,7 +2,6 @@ from flask import Flask
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
 from typing import Dict, List,Optional
 from database.Database import Database
-from flask_injector import inject
 from datetime import timedelta
 
 
@@ -11,36 +10,33 @@ from datetime import timedelta
 class JwtUtils:
     SECRET_KEY:str = "dfhg45ytyj67jt7j665j7"
     #1 day in milliseconds
-    EXPIRATION_HOURS:int = 1
+    EXPIRATION_HOURS:int = 12
     TOKEN_PREFIX:str = "Bearer "
     HEADER:str = "Authorization";
-    USER_FIELDS_FOR_JWT:List[str] = ["username", "password"]
 
-    @inject
-    def __init__(self, app:Flask, database:Database) -> None:
+
+    def __init__(self, app:Flask) -> None:
         app.config["JWT_SECRET_KEY"] = JwtUtils.SECRET_KEY
         app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=JwtUtils.EXPIRATION_HOURS)
         self.manager=JWTManager(app)
-        self.database:Database = database
 
 
     def getJwt(self, requestBody:Dict[str,str]) -> Optional[str]:
-        userFeilds:Optional[Dict[str,str]] = self._getUserFeilds(requestBody)
-        return create_access_token(identity=userFeilds)
-
-
-    def getUserFromJwt(self, requestHeader:Dict[str,str]):
-        jwt:str = requestHeader.get("jwt")
-        if jwt is not None:
-            return self.database.getUser(get_jwt_identity(jwt))
+        if "username" in requestBody and "password" in requestBody:
+            userFeilds: Dict[str, str] = dict()
+            userFeilds["username"] = requestBody["username"]
+            userFeilds["password"] = requestBody["password"]
+            return create_access_token(identity=userFeilds)
         else:
             return None
 
 
-    def _getUserFeilds(self, request:Dict[str,str])->Optional[Dict[str,str]]:
-        userFeilds:Dict[str,str] = dict()
-        for feild in JwtUtils.USER_FIELDS_FOR_JWT:
-            if feild in request:
-                userFeilds[feild]=request.get(feild)
-            else:
-                return None
+    def getUserFromJwt(self, userFeilds:Optional[Dict[str,str]], database:Database):
+        if userFeilds is not None and "username" in userFeilds and "password" in userFeilds:
+            username: str = userFeilds["username"]
+            password: str = userFeilds["password"]
+            print("username: " + username)
+            print("username: " + password)
+            return database.getUser(username, password)
+        else:
+            return None

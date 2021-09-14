@@ -11,7 +11,7 @@ class Database(ABC):
 
 
     @abstractmethod
-    def insertNewMessage(self, id:int, senderId:int, receiverId:int, message:str, subject:str, creationDate:date, read:bool) -> None:
+    def insertNewMessage(self, id: int, senderUsername: str, receiverUsername: str, message: str, subject: str,creationDate: date, read: bool) -> None:
         pass
 
 
@@ -34,9 +34,8 @@ class Database(ABC):
     def getMessage(self, id:int):
         pass
 
-
     @abstractmethod
-    def getUser(self, username: str, password:str = None):
+    def getUser(self, username:str, password:str):
         pass
 
     @abstractmethod
@@ -44,7 +43,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def _createDatabase(self, app:Flask)->None:
+    def _config(self, app:Flask)->None:
         pass
 
 

@@ -15,7 +15,8 @@ class AuthenticationResource(Resource):
         self.jwtUtils:JwtUtils = jwtUtils
 
     def post(self) -> Tuple[Dict[str,str],int]:
-        jwt:str = self.jwtUtils.getJwt(request.get_json(), self.database)
+        print(request.get_json())
+        jwt:Optional[str] = self.jwtUtils.getJwt(request.get_json())
         if jwt is not None:
             return {"jwt":jwt}, HTTPStatusCode.OK.value
         else:
