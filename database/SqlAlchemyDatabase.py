@@ -33,9 +33,12 @@ class SqlAlchemyDatabase(Database):
         return self.MessagesClass.query.all()
 
 
-    def getMessage(self, id: int, user=None):
+    def getMessage(self, id: int, user=None, alsoSender:bool = False):
         if user is not None:
-            return self.MessagesClass.query.filter_by(id=id, receiverUsername=user.username).first()
+            message = self.MessagesClass.query.filter_by(id=id, receiverUsername=user.username).first()
+            if alsoSender and message is None:
+                message = self.MessagesClass.query.filter_by(id=id, senderUsername=user.username).first()
+            return message
         else:
             return self.MessagesClass.query.filter_by(id=id).first()
 
@@ -48,7 +51,7 @@ class SqlAlchemyDatabase(Database):
 
 
     def deleteMessage(self, message) -> None:
-        self.MessagesClass.query.filter_by(id=id).delete()
+        self.MessagesClass.query.filter_by(id=message.id).delete()
         self._db.session.commit()
 
 

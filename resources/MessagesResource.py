@@ -42,8 +42,14 @@ class MessagesResource(Resource):
     def delete(self):
         user = self._getUser(get_jwt_identity())
         messageId: int = self.requestParser.parse_args().get("message-id", None)
-
-        return {"data": "deleted"}, HTTPStatusCode.OK.value
+        if messageId is not None:
+            deleted = Message.deleteMessage(messageId, user, self.database)
+            if deleted:
+                return {"information": "message deleted"}, HTTPStatusCode.OK.value
+            else:
+                abort(HTTPStatusCode.NOT_FOUND.value, error="message not found")
+        else:
+            abort(HTTPStatusCode.BAD_REQUEST.value, error="must submit message id")
 
 
     def _getUser(self, jwtIdentity:str):

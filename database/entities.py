@@ -1,5 +1,4 @@
-from dataclasses import *
-from security.JwtUtils import JwtUtils
+from dataclasses import dataclass, field
 from database.Database import Database
 from typing import Dict, List, Optional
 from datetime import date
@@ -20,7 +19,7 @@ class Message:
 
     @classmethod
     def getMessagefromModel(cls, model):
-        return cls(model.id, model.senderUsername, model.receiverUsername, model.message, model.subject, str(model.creationDate))
+        return cls(model.id, model.senderUsername, model.receiverUsername, model.message, model.subject, str(model.creationDate), model.read)
 
 
     @classmethod
@@ -39,10 +38,20 @@ class Message:
             messages=[message for message in user.receivedMessages if not message.read]
         else:
             messages=user.receivedMessages
+        messagesAsDicts = [cls.getMessagefromModel(message)._getMessageAsDict() for message in messages]
         for message in messages:
             if not message.read:
                 database.updateMessageToRead(message)
-        return [cls.getMessagefromModel(message)._getMessageAsDict() for message in messages]
+        return messagesAsDicts
+
+    @classmethod
+    def deleteMessage(self, messageId:int, user, database:Database) -> bool:
+        message = database.getMessage(messageId, user, alsoSender=True)
+        if message is not None:
+            database.deleteMessage(message)
+            return True
+        else:
+            return False
 
 
     def _getMessageAsDict(self)->Dict[str, str]:

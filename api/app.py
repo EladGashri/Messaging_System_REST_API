@@ -32,7 +32,6 @@ api.add_resource(AuthenticationResource, "/messaging-system/authentication")
 if __name__ == "__main__":
     FlaskInjector(app=app, modules=[configure])
     app.run(debug=True)
-
     '''
     database.insertNewUser(User("elad", "a", "elad"))
     database.insertNewUser(User("amit", "b", "amit"))
@@ -42,5 +41,6 @@ if __name__ == "__main__":
     database.insertNewMessage(Message(2,"amit","elad","hi back at you","hi back at you"))
     database.insertNewMessage(Message(3,"roni","doni","we have similar names","we have similar names"))
     database.insertNewMessage(Message(4,"doni","roni","i know, right?","i know, right"))
+    database.insertNewMessage(Message(5,"amit","elad","hi its me again, remember?","hi its me again, remember?"))
     '''
 
