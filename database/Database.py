@@ -9,26 +9,17 @@ class Database(ABC):
     DATABASE_PATH:str = f"sqlite:///{DATABASE_NAME}"
     SECRET_KEY:str = "psjtk40gk5kf0orr9k3ns"
 
-
     @abstractmethod
     def insertNewMessage(self, id: int, senderUsername: str, receiverUsername: str, message: str, subject: str,creationDate: date, read: bool) -> None:
         pass
-
 
     @abstractmethod
     def insertNewUser(self, username: str, password: str, name: str) -> None:
         pass
 
-
     @abstractmethod
     def getAllMessages(self):
         pass
-
-
-    @abstractmethod
-    def getAllUsers(self, id:int, name:str):
-        pass
-
 
     @abstractmethod
     def getMessage(self, id:int):
@@ -36,6 +27,14 @@ class Database(ABC):
 
     @abstractmethod
     def getUser(self, username:str, password:str):
+        pass
+
+    @abstractmethod
+    def updateMessageToRead(self, message)->None:
+        pass
+
+    @abstractmethod
+    def deleteMessage(self, message)->None:
         pass
 
     @abstractmethod
@@ -48,10 +47,10 @@ class Database(ABC):
 
 
     @abstractmethod
-    def _createMessagesTable(self)->None:
+    def _createMessagesTable(self):
         pass
 
 
     @abstractmethod
-    def _createUsersTable(self)->None:
+    def _createUsersTable(self):
         pass

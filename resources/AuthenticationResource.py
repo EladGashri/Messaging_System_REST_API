@@ -1,4 +1,4 @@
-from typing import *
+from typing import Tuple, Dict, Optional
 from flask import request
 from flask_restful import Resource
 from flask_injector import inject

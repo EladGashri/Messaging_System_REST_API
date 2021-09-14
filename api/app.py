@@ -8,6 +8,7 @@ from database.Database import Database
 from resources.AuthenticationResource import AuthenticationResource
 from resources.MessagesResource import MessagesResource
 from resources.UnreadMessagesResource import UnreadMessagesResource
+from database.entities import User, Message
 
 
 app: Flask = Flask(__name__)
@@ -16,10 +17,11 @@ api: Api = Api(app)
 
 #By using dependency injection for the Database and JWT classes we are implementing the dependency inversion principle in SOLID
 #This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database)
-database:Database=SqlAlchemyDatabase(app, False)
+database:Database=SqlAlchemyDatabase(app)
+jwtUtils:JwtUtils = JwtUtils(app)
 def configure(binder):
-    binder.bind(JwtUtils, to=JwtUtils(app), scope=singleton)
     binder.bind(Database, to=database, scope=singleton)
+    binder.bind(JwtUtils, to=jwtUtils, scope=singleton)
 
 
 api.add_resource(MessagesResource, "/messaging-system/messages")
@@ -29,10 +31,9 @@ api.add_resource(AuthenticationResource, "/messaging-system/authentication")
 
 if __name__ == "__main__":
     FlaskInjector(app=app, modules=[configure])
-    print(database.getAllMessages())
+    app.run(debug=True)
     '''
-    database.insertNewUser("a", "b", "elad")
-    database.insertNewUser("c", "d", "amit")
-    database.insertNewMessage(1,"amit","elad","hi","hi")
+    database.insertNewUser(User("a", "b", "elad"))
+    database.insertNewUser(User("c", "d", "amit"))
+    database.insertNewMessage(Message(1,"c","a","hi","hi"))
     '''
-    #app.run(debug=True)

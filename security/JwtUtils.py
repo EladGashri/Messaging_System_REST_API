@@ -35,8 +35,6 @@ class JwtUtils:
         if userFeilds is not None and "username" in userFeilds and "password" in userFeilds:
             username: str = userFeilds["username"]
             password: str = userFeilds["password"]
-            print("username: " + username)
-            print("username: " + password)
             return database.getUser(username, password)
         else:
             return None
