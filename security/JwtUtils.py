@@ -21,11 +21,9 @@ class JwtUtils:
         self.manager=JWTManager(app)
 
 
-    def getJwt(self, requestBody:Dict[str,str]) -> Optional[str]:
-        if "username" in requestBody and "password" in requestBody:
-            userFeilds: Dict[str, str] = dict()
-            userFeilds["username"] = requestBody["username"]
-            userFeilds["password"] = requestBody["password"]
+    def getJwt(self, username:str, password:str, database:Database) -> Optional[str]:
+        if database.getUser(username, password) is not None:
+            userFeilds:Dict[str, str] = {"username":username, "password":password}
             return create_access_token(identity=userFeilds)
         else:
             return None

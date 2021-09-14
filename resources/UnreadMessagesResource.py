@@ -1,5 +1,5 @@
-from typing import Tuple, Dict, List, Optional
-from flask_restful import Resource
+from typing import Tuple, Dict
+from flask_restful import Resource, abort
 from flask_injector import inject
 from http_codes.HTTPStatusCode import HTTPStatusCode
 from database.Database import Database
@@ -19,11 +19,14 @@ class UnreadMessagesResource(Resource):
 
 
     def get(self) -> Tuple[Dict[str,str],int]:
-        messages:Optional[List[Dict[str,str]]] = Message.getMessageFromJwtIdentity(get_jwt_identity(),self.jwtUtils, self.database)
-        if messages is not None:
-            unreadMessages:List[Dict[str,str]] = [message for message in messages if not message["read"]]
-            for message in unreadMessages:
-                self.database.updateMessageToRead(message)
-            return {"messages":unreadMessages}, HTTPStatusCode.OK.value
+        user = self._getUser(get_jwt_identity())
+        messages = Message.getUserMessages(user, self.database, onlyUnreadMessages=True)
+        return {"messages": messages}, HTTPStatusCode.OK.value
+
+
+    def _getUser(self, jwtIdentity:str):
+        user = self.jwtUtils.getUserFromJwt(jwtIdentity, self.database)
+        if user is not None:
+            return user
         else:
-            return {"error": "incorrect JWT"}, HTTPStatusCode.UNAUTHORIZED.value
+            abort(HTTPStatusCode.UNAUTHORIZED.value, error="username or password incorrect")

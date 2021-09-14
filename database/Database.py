@@ -22,7 +22,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def getMessage(self, id:int):
+    def getMessage(self, id: int, user):
         pass
 
     @abstractmethod

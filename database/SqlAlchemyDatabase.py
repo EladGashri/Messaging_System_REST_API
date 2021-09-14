@@ -1,7 +1,7 @@
 from database.Database import Database
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date
+from datetime import datetime, date
 from database.entities import Message, User
 
 class SqlAlchemyDatabase(Database):
@@ -16,8 +16,9 @@ class SqlAlchemyDatabase(Database):
 
 
     def insertNewMessage(self, message:Message) -> None:
+        dateStr:str = message.creationDate.split("-")
         newMessage = self.MessagesClass(id=message.id, senderUsername=message.senderUsername, receiverUsername=message.receiverUsername,\
-                                        message=message.message, subject=message.subject, creationDate=message.creationDate, read=message.read)
+                                        message=message.message, subject=message.subject, creationDate=datetime(int(dateStr[0]),int(dateStr[1]),int(dateStr[2])) , read=message.read)
         self._db.session.add(newMessage)
         self._db.session.commit()
 
@@ -32,13 +33,17 @@ class SqlAlchemyDatabase(Database):
         return self.MessagesClass.query.all()
 
 
-    def getMessage(self, id: int):
-        return self.MessagesClass.query.filter_by(id=id).first()
+    def getMessage(self, id: int, user=None):
+        if user is not None:
+            return self.MessagesClass.query.filter_by(id=id, receiverUsername=user.username).first()
+        else:
+            return self.MessagesClass.query.filter_by(id=id).first()
 
 
-    def updateMessageToRead(self, message:Message) -> None:
-        messageFromDatabase = self.getMessage(message["id"])
-        setattr(messageFromDatabase, "read", True)
+    def updateMessageToRead(self, message) -> None:
+        if isinstance(message, Message):
+            message=self.getMessage(message.id)
+        setattr(message, "read", True)
         self._db.session.commit()
 
 

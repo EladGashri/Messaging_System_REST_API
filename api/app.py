@@ -17,7 +17,7 @@ api: Api = Api(app)
 
 #By using dependency injection for the Database and JWT classes we are implementing the dependency inversion principle in SOLID
 #This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database)
-database:Database=SqlAlchemyDatabase(app)
+database:Database=SqlAlchemyDatabase(app,False)
 jwtUtils:JwtUtils = JwtUtils(app)
 def configure(binder):
     binder.bind(Database, to=database, scope=singleton)
@@ -32,8 +32,15 @@ api.add_resource(AuthenticationResource, "/messaging-system/authentication")
 if __name__ == "__main__":
     FlaskInjector(app=app, modules=[configure])
     app.run(debug=True)
+
     '''
-    database.insertNewUser(User("a", "b", "elad"))
-    database.insertNewUser(User("c", "d", "amit"))
-    database.insertNewMessage(Message(1,"c","a","hi","hi"))
+    database.insertNewUser(User("elad", "a", "elad"))
+    database.insertNewUser(User("amit", "b", "amit"))
+    database.insertNewUser(User("roni", "c", "roni"))
+    database.insertNewUser(User("doni", "d", "doni"))
+    database.insertNewMessage(Message(1,"elad","amit","hi","hi"))
+    database.insertNewMessage(Message(2,"amit","elad","hi back at you","hi back at you"))
+    database.insertNewMessage(Message(3,"roni","doni","we have similar names","we have similar names"))
+    database.insertNewMessage(Message(4,"doni","roni","i know, right?","i know, right"))
     '''
+
