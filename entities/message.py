@@ -27,4 +27,4 @@ class Message:
 
     @classmethod
     def increment_last_message_id(cls) -> None:
-        setattr(cls, "last_message_id", cls.last_message_id + 1)
+        cls.last_message_id = cls.last_message_id + 1

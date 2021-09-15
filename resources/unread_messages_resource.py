@@ -1,13 +1,13 @@
 from typing import Tuple, Dict
 from flask_restful import Resource
 from flask_injector import inject
-from http_codes.HTTPStatusCode import HTTPStatusCode
-from database.Database import Database
+from http_status_codes.http_status_code import HTTPStatusCode
+from database.database import Database
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from security.JwtUtils import JwtUtils
-from services.MessageService import MessageService
-from services.UserService import UserService
-from resources.ResourcesManager import ResourcesManager
+from security.jwt_utils import JwtUtils
+from services.message_service import MessageService
+from services.user_service import UserService
+from resources.resources_manager import ResourcesManager
 
 
 # The UnreadMessagesResource represented the endpoint with the URI /messaging-system/messages/unread

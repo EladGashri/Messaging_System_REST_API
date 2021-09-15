@@ -1,8 +1,8 @@
 from flask import abort
-from http_codes.HTTPStatusCode import HTTPStatusCode
-from services.UserService import UserService
+from http_status_codes.http_status_code import HTTPStatusCode
+from services.user_service import UserService
 from typing import Optional
-from database.Database import Database
+from database.database import Database
 from flask_restful.reqparse import RequestParser
 
 

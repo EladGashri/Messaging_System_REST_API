@@ -2,16 +2,16 @@ from flask import Flask
 from flask_restful import Api
 from flask_injector import FlaskInjector
 from injector import singleton
-from security.JwtUtils import JwtUtils
-from database.SqlAlchemyDatabase import SqlAlchemyDatabase
-from database.Database import Database
-from services.MessageService import MessageService
-from resources.AuthenticationResource import AuthenticationResource
-from resources.MessagesResource import MessagesResource
-from resources.UnreadMessagesResource import UnreadMessagesResource
-from resources.RegistrationResource import RegistrationResource
-from services.UserService import UserService
-from resources.ResourcesManager import ResourcesManager
+from security.jwt_utils import JwtUtils
+from database.sql_alchemy_database import SqlAlchemyDatabase
+from database.database import Database
+from services.message_service import MessageService
+from resources.authentication_resource import AuthenticationResource
+from resources.messages_resource import MessagesResource
+from resources.unread_messages_resource import UnreadMessagesResource
+from resources.registration_resource import RegistrationResource
+from services.user_service import UserService
+from resources.resources_manager import ResourcesManager
 
 
 app: Flask = Flask(__name__)

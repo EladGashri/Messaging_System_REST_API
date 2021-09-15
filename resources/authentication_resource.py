@@ -2,12 +2,12 @@ from typing import Tuple, Dict, Optional
 from flask import request
 from flask_restful import Resource, abort
 from flask_injector import inject
-from http_codes.HTTPStatusCode import HTTPStatusCode
-from database.Database import Database
-from security.JwtUtils import JwtUtils
-from resources.ResourcesManager import ResourcesManager
-from services.MessageService import MessageService
-from services.UserService import UserService
+from http_status_codes.http_status_code import HTTPStatusCode
+from database.database import Database
+from security.jwt_utils import JwtUtils
+from resources.resources_manager import ResourcesManager
+from services.message_service import MessageService
+from services.user_service import UserService
 
 
 

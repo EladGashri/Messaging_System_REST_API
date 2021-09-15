@@ -1,6 +1,6 @@
-from entities.User import User
+from entities.user import User
 from typing import Dict, Optional
-from database.Database import Database
+from database.database import Database
 from sqlalchemy.exc import IntegrityError
 
 

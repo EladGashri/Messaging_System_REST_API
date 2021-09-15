@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager, create_access_token
 from typing import Dict, Optional
-from database.Database import Database
+from database.database import Database
 from datetime import timedelta
 
 

@@ -1,5 +1,5 @@
-from entities.Message import Message
-from database.Database import Database
+from entities.message import Message
+from database.database import Database
 from typing import List, Dict, Optional
 
 
