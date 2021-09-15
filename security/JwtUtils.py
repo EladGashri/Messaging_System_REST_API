@@ -17,12 +17,12 @@ class JwtUtils:
     def __init__(self, app:Flask) -> None:
         app.config["JWT_SECRET_KEY"] = JwtUtils.SECRET_KEY
         app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=JwtUtils.EXPIRATION_HOURS)
-        self.jwtManager:JWTManager = JWTManager(app)
+        self.jwt_manager:JWTManager = JWTManager(app)
 
 
-    def getJwt(self, username:str, password:str, database:Database) -> Optional[str]:
-        if database.getUser(username, password) is not None:
-            userFeilds:Dict[str, str] = {"username":username, "password":password}
-            return create_access_token(identity=userFeilds)
+    def get_jwt(self, username:str, password:str, database:Database) -> Optional[str]:
+        if database.get_user(username, password) is not None:
+            user_feilds:Dict[str, str] = {"username":username, "password":password}
+            return create_access_token(identity=user_feilds)
         else:
             return None

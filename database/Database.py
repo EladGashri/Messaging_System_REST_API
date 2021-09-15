@@ -11,47 +11,45 @@ class Database(ABC):
     SECRET_KEY:str = "psjtk40gk5kf0orr9k3ns"
 
     @abstractmethod
-    def insertNewMessage(self, message:Message) -> None:
+    def insert_new_message(self, message:Message) -> None:
         pass
 
     @abstractmethod
-    def insertNewUser(self, user:User) -> None:
+    def insert_new_user(self, user:User) -> None:
         pass
 
     @abstractmethod
-    def getNumberOfMessages(self) -> int:
+    def get_numberOf_messages(self) -> int:
         pass
 
     @abstractmethod
-    def getMessage(self, id: int, user, alsoSender:bool):
+    def get_message(self, id: int, user, also_sender:bool):
         pass
 
     @abstractmethod
-    def getUser(self, username:str, password:str):
+    def get_user(self, username:str, password:str):
         pass
 
     @abstractmethod
-    def updateMessageToRead(self, message)->None:
+    def update_message_to_read(self, message)->None:
         pass
 
     @abstractmethod
-    def deleteMessage(self, message)->None:
+    def delete_message(self, message)->None:
         pass
 
     @abstractmethod
-    def deleteDatabase(self)->None:
+    def delete_database(self)->None:
         pass
 
     @abstractmethod
     def _config(self, app:Flask)->None:
         pass
 
-
     @abstractmethod
-    def _createMessagesTable(self):
+    def _create_message_table(self):
         pass
 
-
     @abstractmethod
-    def _createUsersTable(self):
+    def _create_user_table(self):
         pass

@@ -10,10 +10,10 @@ class User:
     name:str = field(default="John Doe")
     
     
-    def getUserAsDict(self) -> Dict[str, str]:
+    def as_dict(self) -> Dict[str, str]:
         return vars(self)
 
 
     @classmethod
-    def fromModel(cls, model):
+    def get_user_from_model(cls, model):
         return cls(model.username, model.name, model.password)

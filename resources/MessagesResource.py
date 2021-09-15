@@ -19,51 +19,51 @@ class MessagesResource(Resource):
 
 
     @inject
-    def __init__(self, database:Database, jwtUtils:JwtUtils, messageService:MessageService, userService:UserService, resourcesManager:ResourcesManager) -> None:
+    def __init__(self, database:Database, jwt_utils:JwtUtils, message_service:MessageService, user_service:UserService, resources_manager:ResourcesManager) -> None:
         self.database:Database = database
-        self.jwtUtils:JwtUtils = jwtUtils
-        self.messageService:MessageService = messageService
-        self.userService:UserService = userService
-        self.resourcesManager:ResourcesManager = resourcesManager
+        self.jwt_utils:JwtUtils = jwt_utils
+        self.message_service:MessageService = message_service
+        self.user_service:UserService = user_service
+        self.resources_manager:ResourcesManager = resources_manager
 
 
     # The endpoint responds to a GET request with one of the following:
     #1. A specific message sent to the user if he put a message-id as a query parameter.
     #2. All the messages sent the user if he didn't put a message-id as a query parameter.
     def get(self) -> Tuple[Dict[str,str],int]:
-        user = self.resourcesManager.getUser(self.userService ,self.database, get_jwt_identity())
-        messageId:int = self.resourcesManager.getMessageId()
-        if messageId is not None:
-            message = self.messageService.getMessage(messageId, user, self.database)
+        user = self.resources_manager.get_user(self.user_service ,self.database, get_jwt_identity())
+        message_id:int = self.resources_manager.get_message_id()
+        if message_id is not None:
+            message = self.message_service.get_message(message_id, user, self.database)
             if message is not None:
                 return {"message": message}, HTTPStatusCode.OK.value
             else:
                 abort(HTTPStatusCode.NOT_FOUND.value, error="message not found")
         else:
-            messages = self.messageService.getUserMessages(user, self.database)
+            messages = self.message_service.get_user_messages(user, self.database)
             return {"messages": messages}, HTTPStatusCode.OK.value
 
 
     # In order to write a message A POST request sould be sent to the endpoint with the receiver-username, subject and message in the request body.
     def post(self) -> Tuple[Dict[str, str], int]:
-        requestBody:Dict[str,str] =request.get_json()
-        if "receiver-username" in requestBody and "subject" in requestBody and "message" in requestBody:
-            if self.userService.checkUsername(self.database, requestBody["receiver-username"]):
-                user = self.resourcesManager.getUser(self.userService, self.database, get_jwt_identity())
-                messageId:int = self.messageService.insertMessage(user.username, requestBody["receiver-username"], requestBody["subject"], requestBody["message"], self.database)
-                return {"information": f"message posted with message id {messageId}"}, HTTPStatusCode.CREATED.value
+        request_body:Dict[str,str] =request.get_json()
+        if "receiver-username" in request_body and "subject" in request_body and "message" in request_body:
+            if self.user_service.check_username(self.database, request_body["receiver-username"]):
+                user = self.resources_manager.getUser(self.user_service, self.database, get_jwt_identity())
+                message_id:int = self.message_service.insert_message(user.username, request_body["receiver-username"], request_body["subject"], request_body["message"], self.database)
+                return {"information": f"message posted with message id {message_id}"}, HTTPStatusCode.CREATED.value
             else:
-                receiverUsername:str = requestBody["receiver-username"]
-                abort(HTTPStatusCode.BAD_REQUEST.value,error=f"no username {receiverUsername}")
+                receiver_username:str = request_body["receiver-username"]
+                abort(HTTPStatusCode.BAD_REQUEST.value,error=f"no username {receiver_username}")
         else:
             abort(HTTPStatusCode.BAD_REQUEST.value, error="must submit receiver-username, subject and message in the request body")
 
     # A DELETE request to the endpoint deletes the message with the message-id sent in the query parameter (if that message was send from or to the user)
     def delete(self):
-        user = self.resourcesManager.getUser(self.userService ,self.database, get_jwt_identity())
-        messageId:int = self.resourcesManager.getMessageId()
-        if messageId is not None:
-            deleted:bool = self.messageService.deleteMessage(messageId, user, self.database)
+        user = self.resources_manager.getUser(self.user_service ,self.database, get_jwt_identity())
+        message_id:int = self.resources_manager.get_message_id()
+        if message_id is not None:
+            deleted:bool = self.message_service.delete_message(message_id, user, self.database)
             if deleted:
                 return {"information": "message deleted"}, HTTPStatusCode.OK.value
             else:

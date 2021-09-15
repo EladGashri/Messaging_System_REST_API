@@ -13,61 +13,61 @@ class SqlAlchemyDatabase(Database):
     def __init__(self, app:Flask, create:bool = True):
         self._config(app)
         self._db:SQLAlchemy = SQLAlchemy(app)
-        self.MessagesClass=self._createMessagesTable()
-        self.UserClass=self._createUsersTable()
+        self.message_class=self._create_message_table()
+        self.user_class=self._create_user_table()
         if create:
             self._db.create_all()
-        Message.lastMessageId = self.getNumberOfMessages()
+        Message.last_message_id = self.get_number_of_messages()
 
 
-    def insertNewMessage(self, message:Message) -> None:
-        dateStr:str = message.creationDate.split("-")
-        newMessage = self.MessagesClass(id=message.id, senderUsername=message.senderUsername, receiverUsername=message.receiverUsername,\
-                                        message=message.message, subject=message.subject, creationDate=datetime(int(dateStr[0]),int(dateStr[1]),int(dateStr[2])) , read=message.read)
-        self._db.session.add(newMessage)
+    def insert_new_message(self, message:Message) -> None:
+        date_str:str = message.creation_date.split("-")
+        new_message = self.message_class(id=message.id, sender_username=message.sender_username, receiver_username=message.receiver_username,\
+                                        message=message.message, subject=message.subject, creationDate=datetime(int(date_str[0]),int(date_str[1]),int(date_str[2])) , read=message.read)
+        self._db.session.add(new_message)
         self._db.session.commit()
 
 
-    def insertNewUser(self, user:User) -> None:
-        newUser = self.UserClass(username=user.username, password=user.password, name=user.name)
-        self._db.session.add(newUser)
+    def insert_new_user(self, user:User) -> None:
+        new_user = self.user_class(username=user.username, password=user.password, name=user.name)
+        self._db.session.add(new_user)
         self._db.session.commit()
 
 
-    def getNumberOfMessages(self) -> int:
-        return len(self.MessagesClass.query.all())
+    def get_numberOf_messages(self) -> int:
+        return len(self.message_class.query.all())
 
 
-    def getMessage(self, id: int, user=None, alsoSender:bool = False):
+    def get_message(self, id: int, user=None, also_sender:bool = False):
         if user is not None:
-            message = self.MessagesClass.query.filter_by(id=id, receiverUsername=user.username).first()
-            if alsoSender and message is None:
-                message = self.MessagesClass.query.filter_by(id=id, senderUsername=user.username).first()
+            message = self.message_class.query.filter_by(id=id, receiver_username=user.username).first()
+            if also_sender and message is None:
+                message = self.message_class.query.filter_by(id=id, sender_username=user.username).first()
             return message
         else:
-            return self.MessagesClass.query.filter_by(id=id).first()
+            return self.message_class.query.filter_by(id=id).first()
 
 
-    def getUser(self, username:str, password:Optional[str] = None):
+    def get_user(self, username:str, password:Optional[str] = None):
         if password is not None:
-            return self.UserClass.query.filter_by(username=username, password=password).first()
+            return self.user_class.query.filter_by(username=username, password=password).first()
         else:
-            return self.UserClass.query.filter_by(username=username).first()
+            return self.user_class.query.filter_by(username=username).first()
 
 
-    def updateMessageToRead(self, message) -> None:
+    def update_message_to_read(self, message) -> None:
         if isinstance(message, Message):
             message=self.getMessage(message.id)
         setattr(message, "read", True)
         self._db.session.commit()
 
 
-    def deleteMessage(self, message) -> None:
-        self.MessagesClass.query.filter_by(id=message.id).delete()
+    def delete_message(self, message) -> None:
+        self.message_class.query.filter_by(id=message.id).delete()
         self._db.session.commit()
 
 
-    def deleteDatabase(self)->None:
+    def delete_database(self)->None:
         self._db.drop_all()
 
 
@@ -77,24 +77,23 @@ class SqlAlchemyDatabase(Database):
         app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 
-    def _createMessagesTable(self):
+    def _create_message_table(self):
         class Message(self._db.Model):
             id:int = self._db.Column(self._db.Integer, primary_key=True)
-            senderUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
-            receiverUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
+            sender_username:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
+            receiver_username:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
             message:str = self._db.Column(self._db.String(500), unique=False, nullable=False)
             subject:str = self._db.Column(self._db.String(50), unique=False, nullable=False)
-            creationDate:date = self._db.Column(self._db.Date, unique=False, nullable=False)
+            creation_date:date = self._db.Column(self._db.Date, unique=False, nullable=False)
             read:bool = self._db.Column(self._db.Boolean, unique=False, nullable=False)
         return Message
 
 
-    def _createUsersTable(self) -> None:
-        Message=self.MessagesClass
+    def _create_user_table(self) -> None:
         class User(self._db.Model):
             username: str = self._db.Column(self._db.String(50), primary_key=True)
             password: str = self._db.Column(self._db.String(50), nullable=False)
             name: str = self._db.Column(self._db.String(50), unique=False, nullable=False)
-            sentMessages = self._db.relationship("Message", backref="sender", primaryjoin="User.username == Message.senderUsername")
-            receivedMessages = self._db.relationship("Message", backref="receiver", primaryjoin="User.username == Message.receiverUsername")
+            sent_messages = self._db.relationship("Message", backref="sender", primaryjoin="User.username == Message.sender_username")
+            received_messages = self._db.relationship("Message", backref="receiver", primaryjoin="User.username == Message.receiver_username")
         return User

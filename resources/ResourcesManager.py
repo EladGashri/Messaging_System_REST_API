@@ -10,15 +10,15 @@ from flask_restful.reqparse import RequestParser
 class ResourcesManager:
 
 
-    def getUser(self, userService:UserService, database:Database, jwtIdentity:str):
-        user = userService.getUserFromJwt(jwtIdentity, database)
+    def get_user(self, user_service:UserService, database:Database, jwt_identity:str):
+        user = user_service.get_user_from_jwt(jwt_identity, database)
         if user is not None:
             return user
         else:
             abort(HTTPStatusCode.UNAUTHORIZED.value, error="invalid JWT")
 
 
-    def getMessageId(self) -> Optional[int]:
-        requestParser:RequestParser = RequestParser()
-        requestParser.add_argument("message-id", type=int, required=False)
-        return requestParser.parse_args().get("message-id", None)
+    def get_message_id(self) -> Optional[int]:
+        request_parser:RequestParser = RequestParser()
+        request_parser.add_argument("message-id", type=int, required=False)
+        return request_parser.parse_args().get("message-id", None)

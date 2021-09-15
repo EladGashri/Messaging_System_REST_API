@@ -18,17 +18,17 @@ class UnreadMessagesResource(Resource):
 
 
     @inject
-    def __init__(self, database:Database, jwtUtils:JwtUtils, messageService:MessageService, userService:UserService, resourcesManager:ResourcesManager) -> None:
+    def __init__(self, database:Database, jwt_utils:JwtUtils, message_service:MessageService, user_service:UserService, resources_manager:ResourcesManager) -> None:
         self.database:Database = database
-        self.jwtUtils:JwtUtils = jwtUtils
-        self.messageService:MessageService = messageService
-        self.userService:UserService = userService
-        self.resourcesManager:ResourcesManager = resourcesManager
+        self.jwt_utils:JwtUtils = jwt_utils
+        self.message_service:MessageService = message_service
+        self.user_service:UserService = user_service
+        self.resources_manager:ResourcesManager = resources_manager
 
 
     # The endpoint responds to a GET request with all the unread messages sent the user.
     # A second request will not return those messages because after the first request they will all be marked as 'read'.
     def get(self) -> Tuple[Dict[str,str],int]:
-        user = self.resourcesManager.getUser(self.userService ,self.database, get_jwt_identity())
-        messages = self.messageService.getUserMessages(user, self.database, onlyUnreadMessages=True)
+        user = self.resources_manager.get_user(self.user_service ,self.database, get_jwt_identity())
+        messages = self.message_service.get_user_messages(user, self.database, only_unread_messages=True)
         return {"messages": messages}, HTTPStatusCode.OK.value

@@ -7,40 +7,39 @@ from typing import List, Dict, Optional
 class MessageService:
 
 
-    def getMessage(self, messageId:int, user, database:Database) -> Optional[Dict[str,str]]:
-        message = database.getMessage(messageId, user)
+    def get_message(self, message_id:int, user, database:Database) -> Optional[Dict[str,str]]:
+        message = database.get_message(message_id, user)
         if message is not None:
-            messageAsDict = Message.getMessagefromModel(message).getMessageAsDict()
-            database.updateMessageToRead(message)
-            return messageAsDict
+            message_as_dict = Message.get_message_from_model(message).as_dict()
+            database.update_message_to_read(message)
+            return message_as_dict
         else:
             return None
 
 
-    def getUserMessages(self, user, database:Database, onlyUnreadMessages :bool = False) -> List[Dict[str,str]]:
-        if onlyUnreadMessages:
-            messages=[message for message in user.receivedMessages if not message.read]
+    def get_user_messages(self, user, database:Database, only_unread_messages :bool = False) -> List[Dict[str,str]]:
+        if only_unread_messages:
+            messages=[message for message in user.received_messages if not message.read]
         else:
-            messages=user.receivedMessages
-        messagesAsDicts = [Message.getMessagefromModel(message).getMessageAsDict() for message in messages]
+            messages=user.received_messages
+        messages_as_dicts = [Message.get_message_from_model(message).as_dict() for message in messages]
         for message in messages:
             if not message.read:
-                database.updateMessageToRead(message)
-        return messagesAsDicts
+                database.update_message_to_read(message)
+        return messages_as_dicts
 
 
-
-    def insertMessage(self, senderUsername:str, receiverUsername:str, subject:str, message:str, database:Database) -> int:
-        Message.incrementLastMessageId()
-        message:Message = Message(Message.lastMessageId, senderUsername, receiverUsername, subject, message)
-        database.insertNewMessage(message)
+    def insert_message(self, sender_username:str, receiver_username:str, subject:str, message:str, database:Database) -> int:
+        Message.increment_last_message_id()
+        message:Message = Message(Message.last_message_id, sender_username, receiver_username, subject, message)
+        database.insert_new_message(message)
         return message.id
 
 
-    def deleteMessage(self, messageId:int, user, database:Database) -> bool:
-        message = database.getMessage(messageId, user, alsoSender=True)
+    def delete_message(self, message_id:int, user, database:Database) -> bool:
+        message = database.get_message(message_id, user, also_sender=True)
         if message is not None:
-            database.deleteMessage(message)
+            database.delete_message(message)
             return True
         else:
             return False
