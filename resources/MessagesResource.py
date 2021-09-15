@@ -17,6 +17,7 @@ class MessagesResource(Resource):
 
     decorators  = [jwt_required()]
 
+
     @inject
     def __init__(self, database:Database, jwtUtils:JwtUtils, messageService:MessageService, userService:UserService, resourcesManager:ResourcesManager) -> None:
         self.database:Database = database
@@ -45,7 +46,7 @@ class MessagesResource(Resource):
 
     # In order to write a message A POST request sould be sent to the endpoint with the receiver-username, subject and message in the request body.
     def post(self) -> Tuple[Dict[str, str], int]:
-        requestBody:Dict[str,str] = self.resourcesManager.getRequestBody(request)
+        requestBody:Dict[str,str] =request.get_json()
         if "receiver-username" in requestBody and "subject" in requestBody and "message" in requestBody:
             if self.userService.checkUsername(self.database, requestBody["receiver-username"]):
                 user = self.resourcesManager.getUser(self.userService, self.database, get_jwt_identity())

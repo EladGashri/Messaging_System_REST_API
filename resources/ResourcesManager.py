@@ -1,7 +1,7 @@
 from flask import abort
 from http_codes.HTTPStatusCode import HTTPStatusCode
 from services.UserService import UserService
-from typing import Dict, Optional
+from typing import Optional
 from database.Database import Database
 from flask_restful.reqparse import RequestParser
 
@@ -22,7 +22,3 @@ class ResourcesManager:
         requestParser:RequestParser = RequestParser()
         requestParser.add_argument("message-id", type=int, required=False)
         return requestParser.parse_args().get("message-id", None)
-
-
-    def getRequestBody(self, request) -> Dict[str,str] :
-        return request.get_json()

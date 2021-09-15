@@ -17,7 +17,7 @@ class SqlAlchemyDatabase(Database):
         self.UserClass=self._createUsersTable()
         if create:
             self._db.create_all()
-        Message.numberOfMessages = self.getNumberOfMessages()
+        Message.lastMessageId = self.getNumberOfMessages()
 
 
     def insertNewMessage(self, message:Message) -> None:

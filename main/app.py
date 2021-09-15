@@ -36,4 +36,4 @@ api.add_resource(RegistrationResource, "/messaging-system/registration")
 
 if __name__ == "__main__":
     FlaskInjector(app=app, modules=[configure])
-    app.run()
+    app.run(debug=True)

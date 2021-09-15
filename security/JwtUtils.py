@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager, create_access_token
-from typing import Dict, List,Optional
+from typing import Dict, Optional
 from database.Database import Database
 from datetime import timedelta
 
@@ -10,13 +10,14 @@ from datetime import timedelta
 class JwtUtils:
     SECRET_KEY:str = "dfhg45ytyj67jt7j665j7"
     EXPIRATION_HOURS:int = 12
-    TOKEN_PREFIX:str = "Bearer "
+    JWT_PREFIX:str = "Bearer "
     HEADER:str = "Authorization";
 
 
     def __init__(self, app:Flask) -> None:
         app.config["JWT_SECRET_KEY"] = JwtUtils.SECRET_KEY
         app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=JwtUtils.EXPIRATION_HOURS)
+        self.jwtManager:JWTManager = JWTManager(app)
 
 
     def getJwt(self, username:str, password:str, database:Database) -> Optional[str]:
