@@ -1,8 +1,10 @@
+from typing import Optional
 from database.Database import Database
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
-from database.entities import Message, User
+from entities.Message import Message
+from entities.User import User
 
 
 class SqlAlchemyDatabase(Database):
@@ -14,6 +16,8 @@ class SqlAlchemyDatabase(Database):
         self.UserClass=self._createUsersTable()
         if create:
             self._db.create_all()
+        Message.numberOfMessages = self.getNumberOfMessages()
+
 
 
     def insertNewMessage(self, message:Message) -> None:
@@ -30,8 +34,8 @@ class SqlAlchemyDatabase(Database):
         self._db.session.commit()
 
 
-    def getAllMessages(self):
-        return self.MessagesClass.query.all()
+    def getNumberOfMessages(self) -> int:
+        return len(self.MessagesClass.query.all())
 
 
     def getMessage(self, id: int, user=None, alsoSender:bool = False):
@@ -56,8 +60,11 @@ class SqlAlchemyDatabase(Database):
         self._db.session.commit()
 
 
-    def getUser(self, username:str, password:str):
-        return self.UserClass.query.filter_by(username=username, password=password).first()
+    def getUser(self, username:str, password:Optional[str] = None):
+        if password is not None:
+            return self.UserClass.query.filter_by(username=username, password=password).first()
+        else:
+            return self.UserClass.query.filter_by(username=username).first()
 
 
     def deleteDatabase(self)->None:

@@ -1,6 +1,7 @@
 from flask import Flask
 from abc import ABC, abstractmethod
-from database.entities import User, Message
+from entities.Message import Message
+from entities.User import User
 
 
 #Database is an abstract class that represents a general interface for a database for this REST API
@@ -18,7 +19,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def getAllMessages(self):
+    def getNumberOfMessages(self) -> int:
         pass
 
     @abstractmethod
