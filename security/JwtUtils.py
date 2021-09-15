@@ -5,9 +5,8 @@ from database.Database import Database
 from datetime import timedelta
 
 
-#The usage of Json Web Token (JWT) for authentication instead of login and sessions aloows to preserve the stateless principle in REST
-#because by using JWT every request is independent from any other request
-
+# The usage of Json Web Token (JWT) for authentication instead of login and sessions allows to preserve the stateless principle in REST.
+# the stateless principle in REST is preserved because using by JWT every request is independent from any other request
 class JwtUtils:
     SECRET_KEY:str = "dfhg45ytyj67jt7j665j7"
     EXPIRATION_HOURS:int = 12
@@ -18,7 +17,6 @@ class JwtUtils:
     def __init__(self, app:Flask) -> None:
         app.config["JWT_SECRET_KEY"] = JwtUtils.SECRET_KEY
         app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=JwtUtils.EXPIRATION_HOURS)
-        self.manager=JWTManager(app)
 
 
     def getJwt(self, username:str, password:str, database:Database) -> Optional[str]:

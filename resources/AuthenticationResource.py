@@ -5,20 +5,26 @@ from flask_injector import inject
 from http_codes.HTTPStatusCode import HTTPStatusCode
 from database.Database import Database
 from security.JwtUtils import JwtUtils
+from resources.ResourcesManager import ResourcesManager
 
 
+# The AuthenticationResource represented the endpoint with the URI /messaging-system/authentication.
 class AuthenticationResource(Resource):
 
 
     @inject
-    def __init__(self, database:Database, jwtUtils:JwtUtils) -> None:
+    def __init__(self, database:Database, jwtUtils:JwtUtils, resourcesManager:ResourcesManager) -> None:
         self.database:Database = database
         self.jwtUtils:JwtUtils = jwtUtils
+        self.resourcesManager:ResourcesManager = resourcesManager
 
 
+    # The endpoint responds to a POST request with a JWT if the user is in the database.
+    # The user needs to submit hit username and password in the request body.
     def post(self) -> Tuple[Dict[str,str],int]:
-        if "username" in request.get_json() and "password" in request.get_json():
-            jwt:Optional[str] = self.jwtUtils.getJwt(request.get_json()["username"], request.get_json()["password"], self.database)
+        requestBody:Dict[str,str] = self.resourcesManager.getRequestBody(request)
+        if "username" in requestBody and "password" in requestBody:
+            jwt:Optional[str] = self.jwtUtils.getJwt(requestBody["username"], requestBody["password"], self.database)
             if jwt is not None:
                 return {"jwt":jwt}, HTTPStatusCode.OK.value
             else:

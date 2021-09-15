@@ -1,10 +1,8 @@
 from dataclasses import dataclass, field
 from typing import Dict
-from entities.User import User
 
 
-#The User class represents the user table in the database using Object Relational Mapping (ORM)
-
+# The User class represents the user table in the database using Object Relational Mapping (ORM).
 @dataclass
 class User:
     username:str = field(default=None)
@@ -17,5 +15,5 @@ class User:
 
 
     @classmethod
-    def fromModel(cls, model) -> User:
+    def fromModel(cls, model):
         return cls(model.username, model.name, model.password)

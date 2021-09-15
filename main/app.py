@@ -11,19 +11,21 @@ from resources.MessagesResource import MessagesResource
 from resources.UnreadMessagesResource import UnreadMessagesResource
 from resources.RegistrationResource import RegistrationResource
 from services.UserService import UserService
+from resources.ResourcesManager import ResourcesManager
 
 
 app: Flask = Flask(__name__)
 api: Api = Api(app)
 
 
-#By using dependency injection for the Database class I am implementing the dependency inversion principle in SOLID
-#This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database)
+# By using dependency injection for the Database class I am implementing the dependency inversion principle in SOLID.
+# This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database).
 def configure(binder):
     binder.bind(Database, to=SqlAlchemyDatabase(app), scope=singleton)
     binder.bind(JwtUtils, to=JwtUtils(app), scope=singleton)
     binder.bind(MessageService, to=MessageService(), scope=singleton)
     binder.bind(UserService, to=UserService(), scope=singleton)
+    binder.bind(ResourcesManager, to=ResourcesManager(), scope=singleton)
 
 
 api.add_resource(MessagesResource, "/messaging-system/messages")

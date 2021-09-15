@@ -7,8 +7,7 @@ from entities.Message import Message
 from entities.User import User
 
 
-# SqlAlchemyDatabase is an implementation of the abstract class Database
-
+# SqlAlchemyDatabase is an implementation of the abstract class Database.
 class SqlAlchemyDatabase(Database):
 
     def __init__(self, app:Flask, create:bool = True):

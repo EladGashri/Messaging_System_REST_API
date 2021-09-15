@@ -4,8 +4,7 @@ from entities.Message import Message
 from entities.User import User
 
 
-#Database is an abstract class that represents a general interface for a database for this REST API
-
+# Database is an abstract class that represents a general interface for a database for this REST API.
 class Database(ABC):
     DATABASE_NAME:str = "Messaging_System.db"
     DATABASE_PATH:str = f"sqlite:///{DATABASE_NAME}"

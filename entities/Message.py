@@ -1,13 +1,12 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, Dict
 from datetime import date
-from entities.Message import Message
 
-#The Message class represents the message table in the database using Object Relational Mapping (ORM)
 
+# The Message class represents the message table in the database using Object Relational Mapping (ORM).
 @dataclass
 class Message:
-    numberOfMessages:ClassVar[int]
+    lastMessageId:ClassVar[int]
     id:int = field(default=-1)
     senderUsername:str = field(default=None)
     receiverUsername:str = field(default=None)
@@ -22,10 +21,10 @@ class Message:
 
 
     @classmethod
-    def getMessagefromModel(cls, model) -> Message:
+    def getMessagefromModel(cls, model):
         return cls(model.id, model.senderUsername, model.receiverUsername, model.message, model.subject, str(model.creationDate), model.read)
 
 
     @classmethod
-    def incrementNumberOfMesages(cls) -> None:
-        setattr(cls, "numberOfMessages", cls.numberOfMessages + 1)
+    def incrementLastMessageId(cls) -> None:
+        setattr(cls, "lastMessageId", cls.lastMessageId + 1)

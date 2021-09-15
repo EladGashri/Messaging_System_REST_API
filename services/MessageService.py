@@ -1,11 +1,13 @@
 from entities.Message import Message
+from database.Database import Database
 from typing import List, Dict, Optional
 
 
+# The MessageService class contains the buisness logic related to the message table in the database
 class MessageService:
 
 
-    def getMessage(self, messageId:int, user, database):
+    def getMessage(self, messageId:int, user, database:Database) -> Optional[Dict[str,str]]:
         message = database.getMessage(messageId, user)
         if message is not None:
             messageAsDict = Message.getMessagefromModel(message).getMessageAsDict()
@@ -15,7 +17,7 @@ class MessageService:
             return None
 
 
-    def getUserMessages(self, user, database, onlyUnreadMessages :bool = False) -> Optional[List[Dict[str,str]]]:
+    def getUserMessages(self, user, database:Database, onlyUnreadMessages :bool = False) -> List[Dict[str,str]]:
         if onlyUnreadMessages:
             messages=[message for message in user.receivedMessages if not message.read]
         else:
@@ -28,14 +30,14 @@ class MessageService:
 
 
 
-    def insertMessage(self, senderUserName:str, receiverUsername:str, subject:str, message:str, database) -> int:
-        Message.incrementNumberOfMesages()
-        message:Message = Message(Message.numberOfMessages, senderUserName, receiverUsername, subject, message)
+    def insertMessage(self, senderUsername:str, receiverUsername:str, subject:str, message:str, database:Database) -> int:
+        Message.incrementLastMessageId()
+        message:Message = Message(Message.lastMessageId, senderUsername, receiverUsername, subject, message)
         database.insertNewMessage(message)
         return message.id
 
 
-    def deleteMessage(self, messageId:int, user, database) -> bool:
+    def deleteMessage(self, messageId:int, user, database:Database) -> bool:
         message = database.getMessage(messageId, user, alsoSender=True)
         if message is not None:
             database.deleteMessage(message)

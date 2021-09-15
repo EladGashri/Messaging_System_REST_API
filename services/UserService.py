@@ -4,6 +4,7 @@ from database.Database import Database
 from sqlalchemy.exc import IntegrityError
 
 
+# The UserService class contains the buisness logic related to the user table in the database
 class UserService:
 
 
