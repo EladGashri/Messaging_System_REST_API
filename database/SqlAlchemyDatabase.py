@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
 from database.entities import Message, User
 
+
 class SqlAlchemyDatabase(Database):
 
     def __init__(self, app:Flask, create:bool = True):
@@ -72,8 +73,8 @@ class SqlAlchemyDatabase(Database):
     def _createMessagesTable(self):
         class Message(self._db.Model):
             id:int = self._db.Column(self._db.Integer, primary_key=True)
-            senderUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), nullable=False)
-            receiverUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), nullable=False)
+            senderUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
+            receiverUsername:str = self._db.Column(self._db.String(50), self._db.ForeignKey('user.username'), unique=False, nullable=False)
             message:str = self._db.Column(self._db.String(500), unique=False, nullable=False)
             subject:str = self._db.Column(self._db.String(50), unique=False, nullable=False)
             creationDate:date = self._db.Column(self._db.Date, unique=False, nullable=False)

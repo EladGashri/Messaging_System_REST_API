@@ -1,6 +1,6 @@
 from flask import Flask
 from abc import ABC, abstractmethod
-from datetime import date
+from database.entities import User, Message
 
 
 #Database is an abstract class that represents a general interface for a database for this REST API
@@ -10,11 +10,11 @@ class Database(ABC):
     SECRET_KEY:str = "psjtk40gk5kf0orr9k3ns"
 
     @abstractmethod
-    def insertNewMessage(self, id: int, senderUsername: str, receiverUsername: str, message: str, subject: str,creationDate: date, read: bool) -> None:
+    def insertNewMessage(self, message:Message) -> None:
         pass
 
     @abstractmethod
-    def insertNewUser(self, username: str, password: str, name: str) -> None:
+    def insertNewUser(self, user:User) -> None:
         pass
 
     @abstractmethod

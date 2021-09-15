@@ -8,7 +8,9 @@ from database.Database import Database
 from resources.AuthenticationResource import AuthenticationResource
 from resources.MessagesResource import MessagesResource
 from resources.UnreadMessagesResource import UnreadMessagesResource
+from resources.RegistrationResource import RegistrationResource
 from database.entities import User, Message
+from services.UserService import UserService
 
 
 app: Flask = Flask(__name__)
@@ -19,14 +21,17 @@ api: Api = Api(app)
 #This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database)
 database:Database=SqlAlchemyDatabase(app,False)
 jwtUtils:JwtUtils = JwtUtils(app)
+userService:UserService = UserService()
 def configure(binder):
     binder.bind(Database, to=database, scope=singleton)
     binder.bind(JwtUtils, to=jwtUtils, scope=singleton)
+    binder.bind(UserService, to=userService, scope=singleton)
 
 
 api.add_resource(MessagesResource, "/messaging-system/messages")
 api.add_resource(UnreadMessagesResource, "/messaging-system/messages/unread")
 api.add_resource(AuthenticationResource, "/messaging-system/authentication")
+api.add_resource(RegistrationResource, "/messaging-system/registration")
 
 
 if __name__ == "__main__":

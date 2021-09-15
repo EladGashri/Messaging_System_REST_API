@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from database.Database import Database
-from typing import Dict, List, Optional
+#from database.Database import Database
+from typing import ClassVar, Dict, List, Optional
 from datetime import date
 
 
@@ -8,11 +8,12 @@ from datetime import date
 
 @dataclass
 class Message:
+    numberOfMessages:ClassVar[int] = 5
     id:int = field(default=-1)
     senderUsername:str = field(default=None)
     receiverUsername:str = field(default=None)
-    message:str = field(default=None)
     subject:str = field(default=None)
+    message:str = field(default=None)
     creationDate:str = field(default=str(date.today()))
     read:bool = field(default=False)
 
@@ -23,7 +24,7 @@ class Message:
 
 
     @classmethod
-    def getMessage(cls, messageId:int, user, database:Database):
+    def getMessage(cls, messageId:int, user, database):
         message = database.getMessage(messageId, user)
         if message is not None:
             database.updateMessageToRead(message)
@@ -33,7 +34,7 @@ class Message:
 
 
     @classmethod
-    def getUserMessages(cls, user, database:Database, onlyUnreadMessages :bool = False) -> Optional[List[Dict[str,str]]]:
+    def getUserMessages(cls, user, database, onlyUnreadMessages :bool = False) -> Optional[List[Dict[str,str]]]:
         if onlyUnreadMessages:
             messages=[message for message in user.receivedMessages if not message.read]
         else:
@@ -45,7 +46,7 @@ class Message:
         return messagesAsDicts
 
     @classmethod
-    def deleteMessage(self, messageId:int, user, database:Database) -> bool:
+    def deleteMessage(self, messageId:int, user, database) -> bool:
         message = database.getMessage(messageId, user, alsoSender=True)
         if message is not None:
             database.deleteMessage(message)
