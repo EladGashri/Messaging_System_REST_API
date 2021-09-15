@@ -7,6 +7,8 @@ from entities.Message import Message
 from entities.User import User
 
 
+# SqlAlchemyDatabase is an implementation of the abstract class Database
+
 class SqlAlchemyDatabase(Database):
 
     def __init__(self, app:Flask, create:bool = True):
@@ -17,7 +19,6 @@ class SqlAlchemyDatabase(Database):
         if create:
             self._db.create_all()
         Message.numberOfMessages = self.getNumberOfMessages()
-
 
 
     def insertNewMessage(self, message:Message) -> None:
@@ -48,6 +49,13 @@ class SqlAlchemyDatabase(Database):
             return self.MessagesClass.query.filter_by(id=id).first()
 
 
+    def getUser(self, username:str, password:Optional[str] = None):
+        if password is not None:
+            return self.UserClass.query.filter_by(username=username, password=password).first()
+        else:
+            return self.UserClass.query.filter_by(username=username).first()
+
+
     def updateMessageToRead(self, message) -> None:
         if isinstance(message, Message):
             message=self.getMessage(message.id)
@@ -58,13 +66,6 @@ class SqlAlchemyDatabase(Database):
     def deleteMessage(self, message) -> None:
         self.MessagesClass.query.filter_by(id=message.id).delete()
         self._db.session.commit()
-
-
-    def getUser(self, username:str, password:Optional[str] = None):
-        if password is not None:
-            return self.UserClass.query.filter_by(username=username, password=password).first()
-        else:
-            return self.UserClass.query.filter_by(username=username).first()
 
 
     def deleteDatabase(self)->None:

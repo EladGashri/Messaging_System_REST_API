@@ -9,6 +9,7 @@ from security.JwtUtils import JwtUtils
 
 class AuthenticationResource(Resource):
 
+
     @inject
     def __init__(self, database:Database, jwtUtils:JwtUtils) -> None:
         self.database:Database = database

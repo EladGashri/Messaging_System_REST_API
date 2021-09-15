@@ -1,9 +1,9 @@
 from dataclasses import dataclass, field
 from typing import ClassVar, Dict
 from datetime import date
+from entities.Message import Message
 
-
-#The database tables are represented as classes using Object Relational Mapping (ORM)
+#The Message class represents the message table in the database using Object Relational Mapping (ORM)
 
 @dataclass
 class Message:
@@ -17,12 +17,12 @@ class Message:
     read:bool = field(default=False)
 
 
-    def getMessageAsDict(self)->Dict[str, str]:
+    def getMessageAsDict(self) -> Dict[str, str]:
         return vars(self)
 
 
     @classmethod
-    def getMessagefromModel(cls, model):
+    def getMessagefromModel(cls, model) -> Message:
         return cls(model.id, model.senderUsername, model.receiverUsername, model.message, model.subject, str(model.creationDate), model.read)
 
 

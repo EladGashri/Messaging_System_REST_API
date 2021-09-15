@@ -17,13 +17,14 @@ app: Flask = Flask(__name__)
 api: Api = Api(app)
 
 
-#By using dependency injection for the Database and JWT classes we are implementing the dependency inversion principle in SOLID
+#By using dependency injection for the Database class I am implementing the dependency inversion principle in SOLID
 #This occures because the application is not dependent on the Database implementation (SqlAlchemyDatabase), it is only dependent on the abstract class (Database)
 def configure(binder):
     binder.bind(Database, to=SqlAlchemyDatabase(app), scope=singleton)
     binder.bind(JwtUtils, to=JwtUtils(app), scope=singleton)
     binder.bind(MessageService, to=MessageService(), scope=singleton)
     binder.bind(UserService, to=UserService(), scope=singleton)
+
 
 api.add_resource(MessagesResource, "/messaging-system/messages")
 api.add_resource(UnreadMessagesResource, "/messaging-system/messages/unread")
@@ -33,4 +34,4 @@ api.add_resource(RegistrationResource, "/messaging-system/registration")
 
 if __name__ == "__main__":
     FlaskInjector(app=app, modules=[configure])
-    app.run(debug=True)
+    app.run()
