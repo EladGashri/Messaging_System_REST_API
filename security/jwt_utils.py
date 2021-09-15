@@ -5,7 +5,7 @@ from database.database import Database
 from datetime import timedelta
 
 
-# The usage of Json Web Token (JWT) for authentication instead of login and sessions allows to preserve the stateless principle in REST.
+# The usage of JSON Web Token (JWT) for authentication instead of login and sessions allows to preserve the stateless principle in REST.
 # the stateless principle in REST is preserved because using by JWT every request is independent from any other request
 class JwtUtils:
     SECRET_KEY:str = "dfhg45ytyj67jt7j665j7"
