@@ -4,7 +4,7 @@ from typing import List, Dict, Optional
 class MessageService:
 
 
-    def getMessage(messageId:int, user, database):
+    def getMessage(self, messageId:int, user, database):
         message = database.getMessage(messageId, user)
         if message is not None:
             messageAsDict = Message.getMessagefromModel(message).getMessageAsDict()
@@ -14,7 +14,7 @@ class MessageService:
             return None
 
 
-    def getUserMessages(user, database, onlyUnreadMessages :bool = False) -> Optional[List[Dict[str,str]]]:
+    def getUserMessages(self, user, database, onlyUnreadMessages :bool = False) -> Optional[List[Dict[str,str]]]:
         if onlyUnreadMessages:
             messages=[message for message in user.receivedMessages if not message.read]
         else:
@@ -27,14 +27,14 @@ class MessageService:
 
 
 
-    def insertMessage(senderUserName:str, receiverUsername:str, subject:str, message:str, database) -> int:
-        cls._incrementNumberOfMesages()
-        message:Message = cls(cls.numberOfMessages, senderUserName, receiverUsername, subject, message)
+    def insertMessage(self, senderUserName:str, receiverUsername:str, subject:str, message:str, database) -> int:
+        Message.incrementNumberOfMesages()
+        message:Message = Message(Message.numberOfMessages, senderUserName, receiverUsername, subject, message)
         database.insertNewMessage(message)
         return message.id
 
 
-    def deleteMessage(messageId:int, user, database) -> bool:
+    def deleteMessage(self, messageId:int, user, database) -> bool:
         message = database.getMessage(messageId, user, alsoSender=True)
         if message is not None:
             database.deleteMessage(message)

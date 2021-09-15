@@ -27,5 +27,5 @@ class Message:
 
 
     @classmethod
-    def _incrementNumberOfMesages(cls) -> None:
+    def incrementNumberOfMesages(cls) -> None:
         setattr(cls, "numberOfMessages", cls.numberOfMessages + 1)

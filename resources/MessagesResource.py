@@ -52,7 +52,7 @@ class MessagesResource(Resource):
 
     def delete(self):
         user = self._getUser(get_jwt_identity())
-        messageId: int = self.requestParser.parse_args().get("message-id", None)
+        messageId: Optional[int] = self._getMessageId()
         if messageId is not None:
             deleted:bool = self.messageService.deleteMessage(messageId, user, self.database)
             if deleted:
