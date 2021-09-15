@@ -49,7 +49,7 @@ class MessagesResource(Resource):
         request_body:Dict[str,str] =request.get_json()
         if "receiver-username" in request_body and "subject" in request_body and "message" in request_body:
             if self.user_service.check_username(self.database, request_body["receiver-username"]):
-                user = self.resources_manager.getUser(self.user_service, self.database, get_jwt_identity())
+                user = self.resources_manager.get_user(self.user_service, self.database, get_jwt_identity())
                 message_id:int = self.message_service.insert_message(user.username, request_body["receiver-username"], request_body["subject"], request_body["message"], self.database)
                 return {"information": f"message posted with message id {message_id}"}, HTTPStatusCode.CREATED.value
             else:
@@ -60,7 +60,7 @@ class MessagesResource(Resource):
 
     # A DELETE request to the endpoint deletes the message with the message-id sent in the query parameter (if that message was send from or to the user)
     def delete(self):
-        user = self.resources_manager.getUser(self.user_service ,self.database, get_jwt_identity())
+        user = self.resources_manager.get_user(self.user_service ,self.database, get_jwt_identity())
         message_id:int = self.resources_manager.get_message_id()
         if message_id is not None:
             deleted:bool = self.message_service.delete_message(message_id, user, self.database)

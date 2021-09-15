@@ -19,7 +19,7 @@ class Database(ABC):
         pass
 
     @abstractmethod
-    def get_numberOf_messages(self) -> int:
+    def get_number_of_messages(self) -> int:
         pass
 
     @abstractmethod

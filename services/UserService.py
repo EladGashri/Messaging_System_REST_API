@@ -27,5 +27,5 @@ class UserService:
             return False
 
 
-    def checkUsername(self,database:Database, username:str) -> bool:
+    def check_username(self,database:Database, username:str) -> bool:
         return database.get_user(username) is not None

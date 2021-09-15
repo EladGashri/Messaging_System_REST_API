@@ -29,7 +29,7 @@ class AuthenticationResource(Resource):
     def post(self) -> Tuple[Dict[str,str],int]:
         request_body:Dict[str,str] = request.get_json()
         if "username" in request_body and "password" in request_body:
-            jwt:Optional[str] = self.jwt_utils.getJwt(request_body["username"], request_body["password"], self.database)
+            jwt:Optional[str] = self.jwt_utils.get_jwt(request_body["username"], request_body["password"], self.database)
             if jwt is not None:
                 return {"jwt":jwt}, HTTPStatusCode.OK.value
             else:

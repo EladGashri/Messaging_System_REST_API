@@ -23,7 +23,7 @@ class SqlAlchemyDatabase(Database):
     def insert_new_message(self, message:Message) -> None:
         date_str:str = message.creation_date.split("-")
         new_message = self.message_class(id=message.id, sender_username=message.sender_username, receiver_username=message.receiver_username,\
-                                        message=message.message, subject=message.subject, creationDate=datetime(int(date_str[0]),int(date_str[1]),int(date_str[2])) , read=message.read)
+                                        message=message.message, subject=message.subject, creation_date=datetime(int(date_str[0]),int(date_str[1]),int(date_str[2])) , read=message.read)
         self._db.session.add(new_message)
         self._db.session.commit()
 
@@ -34,7 +34,7 @@ class SqlAlchemyDatabase(Database):
         self._db.session.commit()
 
 
-    def get_numberOf_messages(self) -> int:
+    def get_number_of_messages(self) -> int:
         return len(self.message_class.query.all())
 
 
