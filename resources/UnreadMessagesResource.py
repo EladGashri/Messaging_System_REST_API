@@ -6,6 +6,7 @@ from database.Database import Database
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from security.JwtUtils import JwtUtils
 from services.MessageService import MessageService
+from services.UserService import UserService
 
 
 class UnreadMessagesResource(Resource):
@@ -13,10 +14,11 @@ class UnreadMessagesResource(Resource):
     decorators  = [jwt_required()]
 
     @inject
-    def __init__(self, database:Database, jwtUtils:JwtUtils, messageService:MessageService) -> None:
+    def __init__(self, database:Database, jwtUtils:JwtUtils, messageService:MessageService, userService:UserService) -> None:
         self.database:Database = database
         self.jwtUtils:JwtUtils = jwtUtils
         self.messageService:MessageService = messageService
+        self.userService:UserService = userService
 
 
     def get(self) -> Tuple[Dict[str,str],int]:
@@ -26,7 +28,7 @@ class UnreadMessagesResource(Resource):
 
 
     def _getUser(self, jwtIdentity:str):
-        user = self.jwtUtils.getUserFromJwt(jwtIdentity, self.database)
+        user = self.userService.getUserFromJwt(jwtIdentity, self.database)
         if user is not None:
             return user
         else:

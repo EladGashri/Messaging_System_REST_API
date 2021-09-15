@@ -7,8 +7,8 @@ from http_codes.HTTPStatusCode import HTTPStatusCode
 from database.Database import Database
 from security.JwtUtils import JwtUtils
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.UserService import UserService
 from services.MessageService import MessageService
+from services.UserService import UserService
 
 
 class MessagesResource(Resource):
@@ -64,7 +64,7 @@ class MessagesResource(Resource):
 
 
     def _getUser(self, jwtIdentity:str):
-        user = self.jwtUtils.getUserFromJwt(jwtIdentity, self.database)
+        user = self.userService.getUserFromJwt(jwtIdentity, self.database)
         if user is not None:
             return user
         else:

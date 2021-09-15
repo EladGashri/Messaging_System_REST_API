@@ -5,7 +5,6 @@ from injector import singleton
 from security.JwtUtils import JwtUtils
 from database.SqlAlchemyDatabase import SqlAlchemyDatabase
 from database.Database import Database
-from entities.Message import Message
 from services.MessageService import MessageService
 from resources.AuthenticationResource import AuthenticationResource
 from resources.MessagesResource import MessagesResource

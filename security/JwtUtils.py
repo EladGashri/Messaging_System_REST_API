@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity
+from flask_jwt_extended import JWTManager, create_access_token
 from typing import Dict, List,Optional
 from database.Database import Database
 from datetime import timedelta
@@ -7,9 +7,9 @@ from datetime import timedelta
 
 #The usage of Json Web Token (JWT) for authentication instead of login and sessions aloows to preserve the stateless principle in REST
 #because by using JWT every request is independent from any other request
+
 class JwtUtils:
     SECRET_KEY:str = "dfhg45ytyj67jt7j665j7"
-    #1 day in milliseconds
     EXPIRATION_HOURS:int = 12
     TOKEN_PREFIX:str = "Bearer "
     HEADER:str = "Authorization";
@@ -25,14 +25,5 @@ class JwtUtils:
         if database.getUser(username, password) is not None:
             userFeilds:Dict[str, str] = {"username":username, "password":password}
             return create_access_token(identity=userFeilds)
-        else:
-            return None
-
-
-    def getUserFromJwt(self, userFeilds:Optional[Dict[str,str]], database:Database):
-        if userFeilds is not None and "username" in userFeilds and "password" in userFeilds:
-            username: str = userFeilds["username"]
-            password: str = userFeilds["password"]
-            return database.getUser(username, password)
         else:
             return None
