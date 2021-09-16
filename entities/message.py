@@ -22,7 +22,7 @@ class Message:
 
     @classmethod
     def get_message_from_model(cls, model):
-        return cls(model.id, model.sender_username, model.receiver_username, model.message, model.subject, str(model.creation_date), model.read)
+        return cls(model.id, model.sender_username, model.receiver_username, model.subject, model.message, str(model.creation_date), model.read)
 
 
     @classmethod
