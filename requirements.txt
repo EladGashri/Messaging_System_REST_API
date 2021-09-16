@@ -1,4 +1,4 @@
-python_version==3.7.6
+python_version==3.7
 aniso8601==9.0.1
 bitstring==3.1.9
 brotlipy==0.7.0
