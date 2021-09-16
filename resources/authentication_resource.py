@@ -1,7 +1,6 @@
 from typing import Tuple, Dict, Optional
 from flask import request
 from flask_restful import Resource, abort
-#from flask_injector import inject
 from http_status_codes.http_status_code import HTTPStatusCode
 from database.database import Database
 from security.jwt_utils import JwtUtils
@@ -11,7 +10,6 @@ from security.jwt_utils import JwtUtils
 class AuthenticationResource(Resource):
 
 
-    #@inject
     def __init__(self, database:Database, jwt_utils:JwtUtils) -> None:
         self.database:Database = database
         self.jwt_utils:JwtUtils = jwt_utils

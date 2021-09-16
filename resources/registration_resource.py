@@ -1,7 +1,6 @@
 from typing import Tuple, Dict
 from flask import request
 from flask_restful import Resource, abort
-#from flask_injector import inject
 from http_status_codes.http_status_code import HTTPStatusCode
 from database.database import Database
 from services.user_service import UserService
@@ -11,7 +10,6 @@ from services.user_service import UserService
 class RegistrationResource(Resource):
 
 
-    #@inject
     def __init__(self, database:Database, user_service:UserService) -> None:
         self.database:Database = database
         self.user_service:UserService = user_service
