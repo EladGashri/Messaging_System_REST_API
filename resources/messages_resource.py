@@ -1,10 +1,9 @@
 from typing import Tuple, Dict
 from flask import request
 from flask_restful import Resource, abort
-from flask_injector import inject
+#from flask_injector import inject
 from http_status_codes.http_status_code import HTTPStatusCode
 from database.database import Database
-from security.jwt_utils import JwtUtils
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.message_service import MessageService
 from services.user_service import UserService
@@ -18,10 +17,9 @@ class MessagesResource(Resource):
     decorators  = [jwt_required()]
 
 
-    @inject
-    def __init__(self, database:Database, jwt_utils:JwtUtils, message_service:MessageService, user_service:UserService, resources_manager:ResourcesManager) -> None:
+    #@inject
+    def __init__(self, database:Database, message_service:MessageService, user_service:UserService, resources_manager:ResourcesManager) -> None:
         self.database:Database = database
-        self.jwt_utils:JwtUtils = jwt_utils
         self.message_service:MessageService = message_service
         self.user_service:UserService = user_service
         self.resources_manager:ResourcesManager = resources_manager
