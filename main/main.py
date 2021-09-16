@@ -28,6 +28,9 @@ def configure(binder):
     binder.bind(ResourcesManager, to=ResourcesManager(), scope=singleton)
 
 
+FlaskInjector(app=app, modules=[configure])
+
+
 api.add_resource(MessagesResource, "/messages")
 api.add_resource(UnreadMessagesResource, "/messages/unread")
 api.add_resource(AuthenticationResource, "/authentication")
@@ -35,5 +38,4 @@ api.add_resource(RegistrationResource, "/registration")
 
 
 if __name__ == "__main__":
-    FlaskInjector(app=app, modules=[configure])
     app.run()
