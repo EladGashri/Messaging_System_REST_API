@@ -10,7 +10,7 @@ from services.user_service import UserService
 from resources.resources_manager import ResourcesManager
 
 
-# The UnreadMessagesResource represented the endpoint with the URI /messaging-system/messages/unread
+# The UnreadMessagesResource represented the endpoint with the URI /messages/unread.
 class UnreadMessagesResource(Resource):
 
 

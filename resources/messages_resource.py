@@ -11,7 +11,7 @@ from services.user_service import UserService
 from resources.resources_manager import ResourcesManager
 
 
-#the MessagesResource represented the endpoint with the URI /messaging-system/messages.
+#the MessagesResource represented the endpoint with the URI /messages.
 class MessagesResource(Resource):
 
 

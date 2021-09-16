@@ -28,10 +28,10 @@ def configure(binder):
     binder.bind(ResourcesManager, to=ResourcesManager(), scope=singleton)
 
 
-api.add_resource(MessagesResource, "/messaging-system/messages")
-api.add_resource(UnreadMessagesResource, "/messaging-system/messages/unread")
-api.add_resource(AuthenticationResource, "/messaging-system/authentication")
-api.add_resource(RegistrationResource, "/messaging-system/registration")
+api.add_resource(MessagesResource, "/messages")
+api.add_resource(UnreadMessagesResource, "/messages/unread")
+api.add_resource(AuthenticationResource, "/authentication")
+api.add_resource(RegistrationResource, "/registration")
 
 
 if __name__ == "__main__":

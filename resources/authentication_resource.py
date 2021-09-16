@@ -11,7 +11,7 @@ from services.user_service import UserService
 
 
 
-# The AuthenticationResource represented the endpoint with the URI /messaging-system/authentication.
+# The AuthenticationResource represented the endpoint with the URI /authentication.
 class AuthenticationResource(Resource):
 
 

@@ -11,7 +11,7 @@ from security.jwt_utils import JwtUtils
 
 
 
-# The RegistrationResource represented the endpoint with the URI /messaging-system/registration
+# The RegistrationResource represented the endpoint with the URI /registration.
 class RegistrationResource(Resource):
 
 
