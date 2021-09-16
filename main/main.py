@@ -17,7 +17,7 @@ api: Api = Api(app)
 
 
 # By using dependency injection for the Database class I am implementing the dependency inversion principle in SOLID.
-# This occures because the application is not dependent on the Database implementation class (SqlAlchemyDatabase), it is only dependent on the abstract class (Database).
+# This occurs because the application is not dependent on the Database implementation class (SqlAlchemyDatabase), it is only dependent on the abstract class (Database).
 database:Database = SqlAlchemyDatabase(app)
 jwt_utils:JwtUtils = JwtUtils(app)
 message_service:MessageService = MessageService()
